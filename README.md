@@ -15,15 +15,15 @@ After building the solution for both platform (x86 and x64), you can test the ba
 ###### for a 32 bit computer:  
 ```
 cd <Release Folder>  
-rundll32 managed32.dll,Run LoadMe.dll,HelloWorld1  
-rundll32 managed32.dll,Run LoadMe.dll,DoSomeMath 123 534  
+rundll32 managed32.dll,Run LoadMe.dll HelloWorld1  
+rundll32 managed32.dll,Run LoadMe.dll DoSomeMath 123 534  
 ```
 
 ###### for a 64 bit computer:  
 ```
 cd <Release Folder> 
-rundll32 managed64.dll,Run LoadMe.dll,HelloWorld1  
-rundll32 managed64.dll,Run LoadMe.dll,HelloWorld2  
-%windir%\SysWOW64\rundll32 managed32.dll,Run LoadMe.dll,DoSomeMath 231 3121  
-%windir%\SysWOW64\rundll32 managed32.dll,Run LoadMe.dll,HelloWorld2  
+rundll32 managed64.dll,Run LoadMe.dll HelloWorld1  
+rundll32 managed64.dll,Run LoadMe.dll HelloWorld2  
+%windir%\SysWOW64\rundll32 managed32.dll,Run LoadMe.dll DoSomeMath 231 3121  
+%windir%\SysWOW64\rundll32 managed32.dll,Run LoadMe.dll HelloWorld2  
 ```
