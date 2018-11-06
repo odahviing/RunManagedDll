@@ -15,6 +15,12 @@ namespace LoadMe
             MessageBox.Show("Hello World 1 At ." + Now);
             //throw new Exception("ouch");
         }
+
+        public static void DoSomeMath(String A, String B)
+        {
+            Int32 sum = Int32.Parse(A) + Int32.Parse(B);
+            MessageBox.Show($"Result is: {sum}");
+        }
     }
 
     public class Class2

@@ -5,7 +5,6 @@ using namespace System;
 using namespace System::Reflection;
 using namespace std;
 
-
 //The entry point function for Rundll32 must be defined with the _stdcall calling convention (CALLBACK defaults to using the _stdcall attribute). 
 //If the _stdcall attribute is missing, then the function defaults to _cdecl calling convention
 //and then Rundll32 will terminate abnormally after calling the function.
@@ -16,15 +15,21 @@ using namespace std;
 #pragma comment(linker, "/EXPORT:Run=_Run@16")
 #endif 
 
-
 extern "C"
 {
 	__declspec(dllexport) BOOL CALLBACK Run(HWND /*hwnd*/, HINSTANCE /*hinst*/, LPSTR pszCmdLine, int /*nCmdShow*/)
 	{
 		String ^cmdLine = gcnew String(pszCmdLine);
-		cli::array<String^>^ inputValues = cmdLine->Split(',');
+		cli::array<String^>^ inputValues = cmdLine->Split(' ');
 		Assembly ^ dllHolder = Assembly::LoadFrom(inputValues[0]); //as rundll32 exact path is not required
 		cli::array<Type^> ^allTypes = dllHolder->GetExportedTypes();
+
+		cli::array<Object^> ^parameters = gcnew cli::array<Object^>(inputValues->Length - 2); // First item is DLL name, Second items is Function name, third item and above are parameters
+		for (int i = 2; i < inputValues->Length; i++) // Only if we have parameters
+		{
+			parameters[i - 2] = gcnew Object;
+			parameters[i - 2] = inputValues[i];
+		}
 
 		for each (auto type in allTypes)
 		{
@@ -32,7 +37,7 @@ extern "C"
 			{
 				Console::WriteLine("Looking for method {0} in Class {1}", inputValues[1], type->FullName);
 				type->InvokeMember(inputValues[1], BindingFlags::InvokeMethod, nullptr,
-					Activator::CreateInstance(type), gcnew cli::array<Object^>{});
+					Activator::CreateInstance(type), parameters);
 				Console::WriteLine("Found It! Finished running method {0} in Class {1}", inputValues[1], type->FullName);
 				return TRUE;
 
